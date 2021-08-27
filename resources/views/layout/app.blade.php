@@ -31,14 +31,14 @@
 
 <div class="wrapper">
     {{--sidebar--}}
-    @include('layout.sidebar');
+    @include('layout.sidebar')
      {{--endsidebar--}}
     <div class="main-panel">
-		@include('layout.navbar');
+		@include('layout.navbar')
         {{-- content--}}
         @yield('content')
         {{-- end-content--}}
-        @include('layout.footer');
+        @include('layout.footer')
 
     </div>
 </div>

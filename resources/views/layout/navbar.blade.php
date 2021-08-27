@@ -69,27 +69,19 @@
                 </li>
 
                 <li class="dropdown dropdown-with-icons">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="fa fa-list"></i>
-                        <p class="hidden-md hidden-lg">
-                            More
-                            <b class="caret"></b>
-                        </p>
+                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                        {{ Auth::user()->name }}
                     </a>
                     <ul class="dropdown-menu dropdown-with-icons">
-                        
                         <li>
-                            <a href="#">
-                                <i class="pe-7s-tools"></i> Settings
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        
-                        <li>
-                            <a href="/" class="text-danger">
-                                <i class="pe-7s-close-circle"></i>
-                                Log out
-                            </a>
+                                <a class="dropdown-item" style="margin-left: 20px" href="{{ route('logout') }}"
+                                   onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                    {{ __('Logout') }}
+                                </a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    @csrf
+                                </form>
                         </li>
                     </ul>
                 </li>

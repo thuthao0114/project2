@@ -3,7 +3,8 @@
 use App\Http\Controllers\MinistryController;
 use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,18 +16,33 @@ use Illuminate\Support\Facades\Route;
 |
 */
 // dang nhap
-Route::get('/',
+/*Route::get('/',
 [StudentController::class,'login']
 );
-Route::post('/home',
+Route::post('/home1',
 [StudentController::class,'store']
-);
+);*/
 
-// trang home
-Route::get('/home',
+/*// trang home
+Route::get('/DASHBOARD',
 [StudentController::class,'index']
+);*/
+
+
+Route::get('/',
+[\App\Http\Controllers\Auth\LoginController::class,'showLoginForm']
 );
 
+Auth::routes();
 
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-
+Route::group(['middleware' => ['auth']], function() {
+    Route::resource('roles', RoleController::class);
+    Route::resource('users', UserController::class);
+    Route::resource('courses', \App\Http\Controllers\CourseController::class);
+    Route::resource('grades', \App\Http\Controllers\GradeController::class);
+    Route::resource('students', \App\Http\Controllers\StudentController::class);
+    Route::resource('subjects', \App\Http\Controllers\SubjectsController::class);
+    Route::resource('books', \App\Http\Controllers\BookController::class);
+});

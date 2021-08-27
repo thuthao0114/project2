@@ -19,9 +19,21 @@
 
         <ul class="nav">
             <li class="active">
-                <a href="/dashboard">
+                <a href="/home">
                     <i class="pe-7s-graph"></i>
                     <p>Dashboard</p>
+                </a>
+            </li>
+            <li>
+                <a href="/roles">
+                    <i class="pe-7s-study"></i>
+                    <p>Quản lý nhóm quyền </p>
+                </a>
+            </li>
+            <li>
+                <a href="/users">
+                    <i class="pe-7s-study"></i>
+                    <p>Quản lý tài khoản </p>
                 </a>
             </li>
             <li>
@@ -31,31 +43,31 @@
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="/courses">
                     <i class="pe-7s-angle-down-circle"></i>
                     <p>Quản lý khóa học </p>
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="/grades">
                     <i class="pe-7s-users"></i>
                     <p>Quản lý lớp học </p>
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="/students">
                     <i class="pe-7s-id"></i>
                     <p>quản lý sinh viên</p>
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="/subjects">
                     <i class="pe-7s-albums"></i>
                     <p>quản lý môn học</p>
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="/books">
                     <i class="pe-7s-notebook"></i>
                     <p>quản lý sách</p>
                 </a>

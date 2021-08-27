@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Grade;
+use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
@@ -9,14 +11,18 @@ use Illuminate\Support\Facades\DB;
 session_start();
 class StudentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function login()
+    function __construct()
     {
-        return view('login');
+        $this->middleware('permission:ds-sinhvien|tao-sinhvien|capnhat-sinhvien|xoa-sinhvien', ['only' => ['index','store']]);
+        $this->middleware('permission:tao-sinhvien', ['only' => ['create','store']]);
+        $this->middleware('permission:capnhat-sinhvien', ['only' => ['edit','update']]);
+        $this->middleware('permission:xoa-sinhvien', ['only' => ['destroy']]);
+    }
+
+    public function index()
+    {
+        $data = Student::get();
+        return  view('student.index',compact('data'));
     }
 
     /**
@@ -24,16 +30,12 @@ class StudentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function create()
     {
-        return view('dashboard');
+        $grades = Grade::pluck('name_grade','id_grade')->all();
+        return  view('student.create',compact('grades'));
     }
 
-
-    public function min_index()
-    {
-        return view('ministry.min-index');
-    }
     /**
      * Store a newly created resource in storage.
      *
@@ -42,20 +44,19 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        $username = $request->username;
-        $password = $request->password;
+        $this->validate($request, [
+            'name_student' => 'required',
+            'birthday' => 'required',
+            'gender' => 'required',
+            'status' => 'required',
+            'id_grade' => 'required',
+        ]);
 
-        $result = DB::table('ministry')->where('username', $username)->where('password', $password)->first();
-        if($result){
-           Session::put('username',$result->username);
-           Session::put('password',$result->password);
-           return Redirect::to('/home');
-        }else{
-            Session::put('message','Sai tài khoản hoặc mật khẩu');
-            return Redirect::to('/');
-        }
+        $input = $request->all();
+        $data = Student::create($input);
+        return redirect()->route('students.index')
+            ->with('success','Tạo mới thành công');
     }
-
 
     /**
      * Display the specified resource.
@@ -65,7 +66,8 @@ class StudentController extends Controller
      */
     public function show($id)
     {
-        //
+        $data = Student::find($id);
+        return view('student.show',compact('data'));
     }
 
     /**
@@ -76,7 +78,11 @@ class StudentController extends Controller
      */
     public function edit($id)
     {
-        //
+        $data = Student::find($id);
+        $grades = Grade::pluck('name_grade','id_grade')->all();
+        $dataGrade = $data->grades->pluck('name_grade','id_grade')->all();
+
+        return view('student.edit',compact('data','grades','dataGrade'));
     }
 
     /**
@@ -88,7 +94,20 @@ class StudentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'name_student' => 'required',
+            'birthday' => 'required',
+            'gender' => 'required',
+            'status' => 'required',
+            'id_grade' => 'required',
+        ]);
+
+        $input = $request->all();
+        $data = Student::find($id);
+        $data->status = $request->status;
+        $data->update($input);
+        return redirect()->route('students.index')
+            ->with('success','Cập nhật thành công');
     }
 
     /**
@@ -99,6 +118,8 @@ class StudentController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Student::find($id)->delete();
+        return redirect()->route('students.index')
+            ->with('success','Xóa thành công');
     }
 }

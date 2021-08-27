@@ -7,5 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Grade extends Model
 {
-    use HasFactory;
+    protected $table = 'grade';
+    protected $primaryKey = 'id_grade';
+    protected $guarded = ['id_grade'];
+    public $timestamps = FALSE;
+
+    public function courses(){
+        return $this->belongsTo('App\Models\Course','id_course','id_course');
+    }
 }

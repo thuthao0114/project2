@@ -2,18 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Course;
 use Illuminate\Http\Request;
 
 class CourseController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    function __construct()
+    {
+        $this->middleware('permission:ds-khoahoc|tao-khoahoc|capnhat-khoahoc|xoa-khoahoc', ['only' => ['index','store']]);
+        $this->middleware('permission:tao-khoahoc', ['only' => ['create','store']]);
+        $this->middleware('permission:capnhat-khoahoc', ['only' => ['edit','update']]);
+        $this->middleware('permission:xoa-khoahoc', ['only' => ['destroy']]);
+    }
     public function index()
     {
-        //
+        $data = Course::get();
+        return  view('course.index',compact('data'));
     }
 
     /**
@@ -23,7 +27,7 @@ class CourseController extends Controller
      */
     public function create()
     {
-        //
+        return  view('course.create');
     }
 
     /**
@@ -34,7 +38,14 @@ class CourseController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'name_course' => 'required',
+        ]);
+
+        $input = $request->all();
+        $data = Course::create($input);
+        return redirect()->route('courses.index')
+            ->with('success','Tạo mới thành công');
     }
 
     /**
@@ -45,7 +56,8 @@ class CourseController extends Controller
      */
     public function show($id)
     {
-        //
+        $data = Course::Where('id_course',$id)->first();
+        return  view('course.show',compact('data'));
     }
 
     /**
@@ -56,7 +68,8 @@ class CourseController extends Controller
      */
     public function edit($id)
     {
-        //
+        $data = Course::Where('id_course',$id)->first();
+        return view('course.edit',compact('data'));
     }
 
     /**
@@ -68,7 +81,15 @@ class CourseController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'name_course' => 'required',
+        ]);
+
+        $input = $request->all();
+        $data = Course::Where('id_course',$id)->first();
+        $data->update($input);
+        return redirect()->route('courses.index')
+            ->with('success','Cập nhật thành công');
     }
 
     /**
@@ -79,6 +100,8 @@ class CourseController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Course::Where('id_course',$id)->first()->delete();
+        return redirect()->route('courses.index')
+            ->with('success','Xóa thành công');
     }
 }
